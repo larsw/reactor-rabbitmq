@@ -1,4 +1,4 @@
-# Reactor RabbitMQ
+# The Reactor-RabbitMQ open-source project is no longer being maintained. Open-source support for this project ended on 2023-06-30.
 
 [![Join the chat at https://gitter.im/reactor/reactor](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/reactor/reactor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Reactor RabbitMQ](https://maven-badges.herokuapp.com/maven-central/io.projectreactor.rabbitmq/reactor-rabbitmq/badge.svg?style=plastic)](https://mvnrepository.com/artifact/io.projectreactor.rabbitmq/reactor-rabbitmq)

@@ -17,6 +17,7 @@
 package reactor.rabbitmq;
 
 import com.rabbitmq.client.*;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -303,9 +304,9 @@ public class SenderTests {
         assertThat(latch.await(5, TimeUnit.SECONDS)).isTrue();
 
         // there is no API way to access the listeners, we are therefore extracting directly from the field
-        assertThat(sendChannel).extracting("shutdownHooks").asList().isEmpty();
-        assertThat(sendChannel).extracting("returnListeners").asList().isEmpty();
-        assertThat(sendChannel).extracting("confirmListeners").asList().isEmpty();
+        assertThat(sendChannel).extracting("shutdownHooks").asInstanceOf(InstanceOfAssertFactories.LIST).isEmpty();
+        assertThat(sendChannel).extracting("returnListeners").asInstanceOf(InstanceOfAssertFactories.LIST).isEmpty();
+        assertThat(sendChannel).extracting("confirmListeners").asInstanceOf(InstanceOfAssertFactories.LIST).isEmpty();
 
         sender.close();
     }

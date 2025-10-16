@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-import org.gradle.util.internal.VersionNumber
+import org.gradle.util.GradleVersion
 
 static def qualifyVersion(String v) {
-	def versionNumber = VersionNumber.parse(v)
+	// Parse version manually since internal VersionNumber is removed in Gradle 8
+	def parts = v.split('-', 2)
+	def versionPart = parts[0]
+	def qualifier = parts.length > 1 ? parts[1] : null
 
-	if (versionNumber == VersionNumber.UNKNOWN) return "BAD";
+	// Check if version part looks valid
+	if (!versionPart.matches('\\d+(\\.\\d+)*')) return "BAD"
 
-	if (versionNumber.qualifier == null || versionNumber.qualifier.size() == 0) return "RELEASE" //new scheme
-	if (versionNumber.qualifier == "RELEASE") return "RELEASE" //old scheme
-	if (versionNumber.qualifier.matches("(?:M|RC)\\d+")) return "MILESTONE"
-	if (versionNumber.qualifier == "SNAPSHOT" || versionNumber.qualifier == "BUILD-SNAPSHOT") return "SNAPSHOT"
+	if (qualifier == null || qualifier.isEmpty()) return "RELEASE" //new scheme
+	if (qualifier == "RELEASE") return "RELEASE" //old scheme
+	if (qualifier.matches("(?:M|RC)\\d+")) return "MILESTONE"
+	if (qualifier == "SNAPSHOT" || qualifier == "BUILD-SNAPSHOT") return "SNAPSHOT"
 
 	return "BAD"
 }

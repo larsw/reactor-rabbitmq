@@ -66,9 +66,7 @@ configure(allprojects) { project ->
 
 	sourceCompatibility = targetCompatibility = 21
 
-	if (JavaVersion.current().isJava8Compatible()) {
-		compileTestJava.options.compilerArgs += "-parameters"
-	}
+	compileTestJava.options.compilerArgs += "-parameters"
 	[compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:varargs",
 															 "-Xlint:cast",
 															 "-Xlint:classfile",

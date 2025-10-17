@@ -192,7 +192,7 @@ public class Receiver implements Closeable {
         // before being passed to downstream subscribers (auto-ack semantics)
         return consumeManualAck(queue, options)
                 .doOnNext(AcknowledgableDelivery::ack)
-                .map(ackableMsg -> ackableMsg);
+                .cast(Delivery.class);
     }
 
     public Flux<AcknowledgableDelivery> consumeManualAck(final String queue) {

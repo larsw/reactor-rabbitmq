@@ -82,7 +82,7 @@ public class ExceptionHandlers {
             if (timeout == null || timeout.isNegative() || timeout.isZero()) {
                 throw new IllegalArgumentException("Timeout must be greater than 0");
             }
-            if (waitingTime == null || timeout.isNegative() || timeout.isNegative()) {
+            if (waitingTime == null || waitingTime.isNegative() || waitingTime.isZero()) {
                 throw new IllegalArgumentException("Waiting time must be greater than 0");
             }
             if (timeout.compareTo(waitingTime) <= 0) {

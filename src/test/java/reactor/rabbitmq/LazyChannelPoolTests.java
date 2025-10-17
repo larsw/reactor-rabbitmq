@@ -179,7 +179,7 @@ class LazyChannelPoolTests {
                                     try {
                                         channel.basicPublish("", "", null, "".getBytes());
                                     } catch (IOException e) {
-                                        e.printStackTrace();
+                                        throw new RuntimeException("Failed to publish message", e);
                                     }
                                 })
                                 .delayElement(to.minus(from))

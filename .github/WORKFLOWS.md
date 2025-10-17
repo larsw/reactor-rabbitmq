@@ -57,6 +57,8 @@ This repository includes two GitHub Actions workflows for automated building, te
 
 Once published, you can consume the packages from GitHub Packages:
 
+**Note:** Replace `OWNER` with the repository owner (e.g., `larsw`) and `VERSION` with the desired version (e.g., `1.5.7-SNAPSHOT` or `1.5.7`).
+
 ### Maven
 
 Add to your `pom.xml`:
@@ -65,14 +67,14 @@ Add to your `pom.xml`:
 <repositories>
     <repository>
         <id>github</id>
-        <url>https://maven.pkg.github.com/larsw/reactor-rabbitmq</url>
+        <url>https://maven.pkg.github.com/OWNER/reactor-rabbitmq</url>
     </repository>
 </repositories>
 
 <dependency>
     <groupId>io.projectreactor.rabbitmq</groupId>
     <artifactId>reactor-rabbitmq</artifactId>
-    <version>1.5.7-SNAPSHOT</version>
+    <version>VERSION</version>
 </dependency>
 ```
 
@@ -83,7 +85,7 @@ Add to your `build.gradle`:
 ```groovy
 repositories {
     maven {
-        url = uri("https://maven.pkg.github.com/larsw/reactor-rabbitmq")
+        url = uri("https://maven.pkg.github.com/OWNER/reactor-rabbitmq")
         credentials {
             username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
             password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
@@ -92,7 +94,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.projectreactor.rabbitmq:reactor-rabbitmq:1.5.7-SNAPSHOT'
+    implementation 'io.projectreactor.rabbitmq:reactor-rabbitmq:VERSION'
 }
 ```
 

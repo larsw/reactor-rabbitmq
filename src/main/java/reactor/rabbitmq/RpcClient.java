@@ -151,7 +151,10 @@ public class RpcClient implements AutoCloseable {
 
         @Override
         public void onSubscribe(Subscription s) {
-            // FIXME set up global consumer outside of a given call
+            // FIXME: Performance issue - consumer setup happens on first call rather than globally.
+            // Ideally, the consumer should be set up once when RpcClient is created, not on the
+            // first RPC call. This would require refactoring to move consumer setup to constructor
+            // or a dedicated initialization method.
             if (consumerSetUp.compareAndSet(false, true)) {
                 DeliverCallback deliver = (consumerTag, delivery) -> {
                     String correlationId = delivery.getProperties().getCorrelationId();

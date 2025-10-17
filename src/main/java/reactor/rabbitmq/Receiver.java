@@ -188,7 +188,8 @@ public class Receiver implements Closeable {
     }
 
     public Flux<Delivery> consumeAutoAck(final String queue, ConsumeOptions options) {
-        // TODO why acking here and not just after emitter.next()?
+        // Ack is done in doOnNext before mapping to ensure the message is acknowledged
+        // before being passed to downstream subscribers (auto-ack semantics)
         return consumeManualAck(queue, options)
                 .doOnNext(AcknowledgableDelivery::ack)
                 .map(ackableMsg -> ackableMsg);
@@ -199,8 +200,9 @@ public class Receiver implements Closeable {
     }
 
     public Flux<AcknowledgableDelivery> consumeManualAck(final String queue, ConsumeOptions options) {
-        // TODO track flux so it can be disposed when the sender is closed?
-        // could be also developer responsibility
+        // Note: The created flux is not automatically tracked for disposal. It is the
+        // developer's responsibility to dispose of the flux when done, or to manage
+        // the lifecycle through the Receiver's close() method.
         return Flux.create(emitter -> connectionMono.map(CHANNEL_CREATION_FUNCTION).subscribe(channel -> {
             try {
                 if (options.getChannelCallback() != null) {

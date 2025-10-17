@@ -36,7 +36,7 @@ configure(rootProject) {
 	}
 
 	asciidoctor {
-		sourceDir "src/docs/asciidoc/"
+		sourceDir = file("src/docs/asciidoc/")
 		sources {
 			include "index.asciidoc"
 		}
@@ -46,7 +46,7 @@ configure(rootProject) {
 				include 'images/**'
 			}
 		}
-		outputDir file("$buildDir/docs/asciidoc/html")
+		outputDir = file("$buildDir/docs/asciidoc/html")
 		logDocuments = true
 		attributes stylesdir: "stylesheets/",
 				   stylesheet: 'golo.css',
@@ -54,12 +54,12 @@ configure(rootProject) {
 	}
 
 	asciidoctorPdf {
-		sourceDir "src/docs/asciidoc/"
+		sourceDir = file("src/docs/asciidoc/")
 		sources {
 			include "index.asciidoc"
 		}
 		baseDirFollowsSourceDir()
-		outputDir file("$buildDir/docs/asciidoc/pdf")
+		outputDir = file("$buildDir/docs/asciidoc/pdf")
 		logDocuments = true
 		attributes 'source-highlighter': 'coderay'
 	}

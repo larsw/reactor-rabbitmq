@@ -393,7 +393,8 @@ public class RabbitFluxTests {
                 try {
                     Thread.sleep(100L);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Interrupted during test", e);
                 }
                 counter.addAndGet(1);
                 message.ack();
@@ -460,7 +461,8 @@ public class RabbitFluxTests {
                 try {
                     Thread.sleep(100L);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Interrupted during test", e);
                 }
                 counter.addAndGet(1);
                 message.ack();
@@ -1428,7 +1430,7 @@ public class RabbitFluxTests {
             try {
                 channel.basicConsume(queue, true, deliverCallback, cancelCallback);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Failed to consume from queue", e);
             }
         }));
         return consumeFlux.timeout(timeout);

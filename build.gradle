@@ -64,7 +64,10 @@ configure(allprojects) { project ->
 	apply plugin: 'java-library'
 	apply from: "${rootDir}/gradle/setup.gradle"
 
-	sourceCompatibility = targetCompatibility = 21
+	java {
+		sourceCompatibility = JavaVersion.VERSION_21
+		targetCompatibility = JavaVersion.VERSION_21
+	}
 
 	compileTestJava.options.compilerArgs += "-parameters"
 	[compileJava, compileTestJava]*.options*.compilerArgs = ["-Xlint:varargs",
@@ -100,6 +103,7 @@ configure(allprojects) { project ->
 		testImplementation "org.junit.jupiter:junit-jupiter-api"
 		testImplementation "org.junit.jupiter:junit-jupiter-params"
 		testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+		testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 
 		testImplementation libs.reactor.test
 		testImplementation libs.mockito
@@ -129,7 +133,12 @@ configure(rootProject) {
 
 	test {
 		useJUnitPlatform()
-		systemProperty 'rabbitmqctl.bin', System.getProperty('rabbitmqctl.bin') ?: 'DOCKER:rabbitmq'
+		systemProperty 'rabbitmqctl.bin', System.getProperty('rabbitmqctl.bin') ?: "${rootDir}/rabbitmq/sbin/rabbitmqctl"
+		
+		// Pass Erlang cookie from environment if set
+		if (System.getenv('RABBITMQ_ERLANG_COOKIE')) {
+			systemProperty 'rabbitmq.erlang.cookie', System.getenv('RABBITMQ_ERLANG_COOKIE')
+		}
 	}
 
 	//add specific task artifacts to the publication

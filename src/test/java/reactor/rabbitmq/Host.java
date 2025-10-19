@@ -82,8 +82,16 @@ public class Host {
     }
 
     public static Process rabbitmqctl(String command) throws IOException {
-        return executeCommand(rabbitmqctlCommand() +
-            " " + command);
+        String fullCommand = rabbitmqctlCommand() + " " + command;
+        
+        // Check if we need to set the Erlang cookie
+        String erlangCookie = System.getProperty("rabbitmq.erlang.cookie", System.getenv("RABBITMQ_ERLANG_COOKIE"));
+        if (erlangCookie != null && !erlangCookie.isEmpty()) {
+            // Set the cookie via environment variable for the rabbitmqctl process
+            fullCommand = "RABBITMQ_ERLANG_COOKIE=" + erlangCookie + " " + fullCommand;
+        }
+        
+        return executeCommand(fullCommand);
     }
 
     public static String rabbitmqctlCommand() {

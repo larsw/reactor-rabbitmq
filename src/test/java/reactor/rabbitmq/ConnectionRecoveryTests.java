@@ -17,7 +17,6 @@
 package reactor.rabbitmq;
 
 import com.rabbitmq.client.*;
-import com.rabbitmq.client.impl.NetworkConnection;
 import com.rabbitmq.client.impl.recovery.AutorecoveringConnection;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

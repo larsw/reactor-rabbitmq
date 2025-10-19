@@ -4,10 +4,10 @@ reactorCore = "3.7.6"
 rabbitMq = "5.25.0"
 
 # Other shared versions
-asciidoctor = "3.3.2"
+asciidoctor = "4.0.5"
 junit = "5.12.2"
 slf4j = "2.0.17"
-springBoot = "2.7.18"
+springBoot = "3.3.5"
 reactiveStreams = "1.0.4"
 
 [libraries]
@@ -21,7 +21,7 @@ reactor-core = { module = "io.projectreactor:reactor-core", version.ref = "react
 reactor-test = { module = "io.projectreactor:reactor-test", version.ref = "reactorCore" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4j-jcl = { module = "org.slf4j:jcl-over-slf4j", version.ref = "slf4j" }
-spring-amqp-rabbitmq = "org.springframework.amqp:spring-rabbit:2.4.17"
+spring-amqp-rabbitmq = "org.springframework.amqp:spring-rabbit:3.2.5"
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "springBoot" }
 spring-boot-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "springBoot" }
 

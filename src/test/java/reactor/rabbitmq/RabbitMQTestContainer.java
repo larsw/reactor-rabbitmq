@@ -35,7 +35,7 @@ public class RabbitMQTestContainer implements BeforeAllCallback, ExtensionContex
         if (!started) {
             synchronized (RabbitMQTestContainer.class) {
                 if (!started) {
-                    rabbitMQContainer = new RabbitMQContainer(DockerImageName.parse("rabbitmq:3.9"))
+                    rabbitMQContainer = new RabbitMQContainer(DockerImageName.parse("rabbitmq:latest"))
                             .withExposedPorts(5672)
                             .withFixedExposedPort(5672, 5672); // Map container port 5672 to host port 5672
                     rabbitMQContainer.start();

@@ -12,14 +12,15 @@ This repository includes two GitHub Actions workflows for automated building, te
 
 **What it does:**
 - Sets up Java 21 with Gradle caching
-- Starts a RabbitMQ service container for integration tests
+- Uses Testcontainers to automatically start a RabbitMQ 3.9 container for integration tests
 - Builds the project using Gradle
 - Runs all tests
 - Archives test results and build artifacts
 
 **Requirements:**
 - No special configuration needed
-- Tests run against RabbitMQ 3.9 container
+- Docker must be available (automatically provided in GitHub Actions)
+- Tests automatically manage the RabbitMQ container via Testcontainers
 
 ### 2. Publish to GitHub Packages (`publish-packages.yml`)
 

@@ -9,6 +9,7 @@ junit = "5.12.2"
 slf4j = "2.0.17"
 springBoot = "2.7.18"
 reactiveStreams = "1.0.4"
+testcontainers = "1.20.4"
 
 [libraries]
 assertj = "org.assertj:assertj-core:3.27.3"
@@ -24,6 +25,8 @@ slf4j-jcl = { module = "org.slf4j:jcl-over-slf4j", version.ref = "slf4j" }
 spring-amqp-rabbitmq = "org.springframework.amqp:spring-rabbit:2.4.17"
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "springBoot" }
 spring-boot-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "springBoot" }
+testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
+testcontainers-rabbitmq = { module = "org.testcontainers:rabbitmq", version.ref = "testcontainers" }
 
 [plugins]
 artifactory = { id = "com.jfrog.artifactory", version = "4.27.1" }

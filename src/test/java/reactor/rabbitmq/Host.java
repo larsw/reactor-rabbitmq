@@ -94,7 +94,8 @@ public class Host {
         }
         if (rabbitmqCtl.startsWith("DOCKER:")) {
             String containerId = rabbitmqCtl.split(":")[1];
-            return "docker exec " + containerId + " rabbitmqctl";
+            // Use full path to rabbitmqctl for RabbitMQ 4.x compatibility
+            return "docker exec " + containerId + " /opt/rabbitmq/sbin/rabbitmqctl";
         } else if ("sudo_rabbitmqctl".equals(rabbitmqCtl)) {
             return "sudo rabbitmqctl";
         } else {

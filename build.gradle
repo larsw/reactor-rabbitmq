@@ -111,6 +111,10 @@ configure(allprojects) { project ->
 		testRuntimeOnly libs.slf4j.api
 		testRuntimeOnly libs.slf4j.jcl
 		testRuntimeOnly libs.logback
+		
+		// Testcontainers for integration tests
+		testImplementation platform(libs.testcontainers.bom)
+		testImplementation libs.testcontainers.rabbitmq
 	}
 
 	// force test runs even when there are no test changes

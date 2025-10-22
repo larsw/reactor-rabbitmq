@@ -43,12 +43,9 @@ public class RabbitMQTestContainer implements BeforeAllCallback, ExtensionContex
                     rabbitMQContainer.start();
                     
                     // Set system property for rabbitmqctl to use the container
-                    // Use container name instead of ID for better compatibility
-                    String containerName = rabbitMQContainer.getContainerName();
-                    if (containerName != null && containerName.startsWith("/")) {
-                        containerName = containerName.substring(1); // Remove leading slash
-                    }
-                    System.setProperty("rabbitmqctl.bin", "DOCKER:" + containerName);
+                    // Use the actual container ID which Docker exec accepts
+                    String containerId = rabbitMQContainer.getContainerId();
+                    System.setProperty("rabbitmqctl.bin", "DOCKER:" + containerId);
                     
                     started = true;
                     

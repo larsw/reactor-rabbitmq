@@ -106,6 +106,15 @@ publishing {
 				}
 			}
 		}
+		// GitHub Packages repository
+		maven {
+			name = "GitHubPackages"
+			url = uri("https://maven.pkg.github.com/${System.getenv("GITHUB_REPOSITORY") ?: "larsw/reactor-rabbitmq"}")
+			credentials {
+				username = System.getenv("GITHUB_ACTOR") ?: findProperty("githubUsername")
+				password = System.getenv("GITHUB_TOKEN") ?: findProperty("githubToken")
+			}
+		}
 	}
 
 	publications {

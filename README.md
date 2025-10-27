@@ -14,6 +14,14 @@ non-blocking back-pressure and very low overheads. This enables applications
 using Reactor to use RabbitMQ as a message bus or streaming platform and integrate
 with other systems to provide an end-to-end reactive pipeline.
 
+## Features
+
+* Reactive API for sending and receiving messages
+* Support for RabbitMQ Streams (high-throughput, persistent message logs)
+* Publisher confirms and manual acknowledgements
+* Resource management (queues, exchanges, bindings)
+* Connection recovery and error handling
+
 ## Getting started
 
 For the latest stable release, please see the [getting started](https://projectreactor.io/docs/rabbitmq/release/reference/#_getting_started)

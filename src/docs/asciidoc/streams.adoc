@@ -1,0 +1,163 @@
+=== RabbitMQ Streams Support
+
+Starting with version 1.5.7, Reactor RabbitMQ includes support for https://www.rabbitmq.com/streams.html[RabbitMQ Streams].
+
+==== What are RabbitMQ Streams?
+
+RabbitMQ Streams are a new data structure introduced in RabbitMQ 3.9. Streams are append-only logs that are replicated and can be consumed multiple times. They are optimized for high throughput, large message retention, and fan-out scenarios.
+
+Key differences from regular queues:
+
+* Messages are persisted and can be read multiple times
+* Consumers can read from any point in the stream (by offset or timestamp)
+* Optimized for high throughput scenarios
+* Messages are not deleted when consumed
+
+==== Declaring a Stream
+
+Streams can be declared using the `StreamSpecification` class:
+
+[source,java]
+----
+Sender sender = new Sender();
+
+StreamSpecification streamSpec = StreamSpecification.stream("my-stream")
+    .maxLengthBytes(10_000_000L)  // 10 MB max size
+    .maxAge("7D")                  // Keep messages for 7 days
+    .maxSegmentSizeBytes(5_000_000);  // 5 MB segments
+
+sender.declare(streamSpec)
+    .block();
+----
+
+Stream-specific configuration options:
+
+* `maxLengthBytes(long)`: Maximum size of the stream in bytes. Older messages are deleted when this limit is reached.
+* `maxAge(String)`: Maximum age of messages (e.g., "7D" for 7 days, "12h" for 12 hours).
+* `maxSegmentSizeBytes(int)`: Maximum size of each segment file on disk.
+
+==== Sending Messages to Streams
+
+To send messages to a stream, use the `StreamSender` class:
+
+[source,java]
+----
+Environment environment = Environment.builder().build();
+StreamSender streamSender = new StreamSender(
+    new StreamSenderOptions().environment(environment)
+);
+
+Flux<OutboundMessage> messages = Flux.range(0, 100)
+    .map(i -> new OutboundMessage("", "my-stream", ("Message " + i).getBytes()));
+
+streamSender.send("my-stream", messages)
+    .doOnNext(result -> {
+        if (result.isConfirmed()) {
+            System.out.println("Message confirmed");
+        } else {
+            System.err.println("Message not confirmed: " + result.getError());
+        }
+    })
+    .blockLast();
+
+streamSender.close();
+----
+
+==== Receiving Messages from Streams
+
+To receive messages from a stream, use the `StreamReceiver` class:
+
+[source,java]
+----
+Environment environment = Environment.builder().build();
+StreamReceiver streamReceiver = new StreamReceiver(
+    new StreamReceiverOptions().environment(environment)
+);
+
+StreamConsumeOptions options = new StreamConsumeOptions()
+    .offset(OffsetSpecification.first())  // Start from beginning
+    .name("my-consumer");                 // Consumer name for tracking
+
+streamReceiver.consumeAutoAck("my-stream", options)
+    .subscribe(delivery -> {
+        System.out.println("Received: " + new String(delivery.getBody()));
+        System.out.println("Offset: " + delivery.getOffset());
+    });
+
+// Later...
+streamReceiver.close();
+----
+
+==== Offset Specifications
+
+Consumers can start reading from different positions in the stream:
+
+* `OffsetSpecification.first()`: Start from the beginning of the stream
+* `OffsetSpecification.last()`: Start from the end of the stream  
+* `OffsetSpecification.next()`: Start from the next message
+* `OffsetSpecification.offset(long offset)`: Start from a specific offset
+* `OffsetSpecification.timestamp(long timestamp)`: Start from a specific timestamp
+
+==== Complete Example
+
+[source,java]
+----
+// Declare the stream
+Sender sender = new Sender();
+StreamSpecification streamSpec = StreamSpecification.stream("my-stream")
+    .maxLengthBytes(10_000_000L);
+
+sender.declare(streamSpec).block();
+
+// Send messages
+Environment environment = Environment.builder().build();
+try (StreamSender streamSender = new StreamSender(
+        new StreamSenderOptions().environment(environment))) {
+    
+    Flux<OutboundMessage> messages = Flux.range(0, 10)
+        .map(i -> new OutboundMessage("", "my-stream", ("Message " + i).getBytes()));
+    
+    streamSender.send("my-stream", messages)
+        .doOnNext(r -> System.out.println("Sent: " + r.isConfirmed()))
+        .blockLast();
+}
+
+// Receive messages
+try (StreamReceiver streamReceiver = new StreamReceiver(
+        new StreamReceiverOptions().environment(environment))) {
+    
+    StreamConsumeOptions options = new StreamConsumeOptions()
+        .offset(OffsetSpecification.first());
+    
+    streamReceiver.consumeAutoAck("my-stream", options)
+        .take(10)
+        .subscribe(delivery -> 
+            System.out.println("Received: " + new String(delivery.getBody()))
+        );
+}
+
+sender.close();
+----
+
+==== Configuration
+
+The Stream protocol uses a different port than AMQP (default 5552 instead of 5672). The `Environment` class from the stream-client library handles this automatically.
+
+For custom configuration:
+
+[source,java]
+----
+Environment environment = Environment.builder()
+    .host("localhost")
+    .port(5552)
+    .username("guest")
+    .password("guest")
+    .build();
+
+StreamSenderOptions options = new StreamSenderOptions()
+    .environment(environment);
+----
+
+==== Dependencies
+
+To use RabbitMQ Streams support, the `com.rabbitmq:stream-client` dependency is automatically included when you use `reactor-rabbitmq` version 1.5.7 or later.

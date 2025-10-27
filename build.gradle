@@ -93,6 +93,7 @@ configure(allprojects) { project ->
 	dependencies {
 		api libs.reactor.core
 		api libs.rabbitmq.javaClient
+		api libs.rabbitmq.stream
 
 		// JSR-305 annotations
 		compileOnly libs.jsr305
